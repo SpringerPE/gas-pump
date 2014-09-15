@@ -50,11 +50,11 @@ describe GASAgent do
 	it "can download a project" do
 		HTTParty.stub(:get).and_return(response)
   	agent.stub(:save_response)
-  	agent.stub(:create_directory)
+  	agent.stub(:create_directory).and_return("/some/directory")
   	agent.stub(:create_files)
   	agent.stub(:count_files).and_return(1)
   	output = capture_stdout { agent.download_project(2, all_drive_files) }
-  	expect(output).to eq("*** Downloading files ***\n*** Successfully downloaded Google Apps Script [ID: 2] ***\n")
+  	expect(output).to eq("*** Downloading files ***\n*** Successfully downloaded Google Apps Script [ID: 2] to /some/directory ***\n")
 	end
 
 	def capture_stdout(&block)

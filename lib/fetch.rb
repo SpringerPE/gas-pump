@@ -1,8 +1,9 @@
 module Fetch
 
 	def download_project(id, files_list=@all_projects, client=@client)
+		"*** Connecting to Google Drive ***"
 	  file = select_project(id, files_list)
-	  
+	   
 	  json_url = file.export_links["application/vnd.google-apps.script+json"]
 	  auth = "Bearer " + client.authorization.access_token
 	  response = HTTParty.get(json_url, :headers => {"Authorization" => auth})
@@ -17,7 +18,7 @@ module Fetch
 
 		  expected_number_of_files = gas_project_data["files"].length
 		  number_of_files = count_files(dir_name)
-		  puts "*** Successfully downloaded Google Apps Script [ID: #{id}] ***" if files_created?(expected_number_of_files, number_of_files)
+		  puts "*** Successfully downloaded Google Apps Script [ID: #{id}] to #{dir_name} ***" if files_created?(expected_number_of_files, number_of_files)
 		else
 			puts "*** Unauthorized to download the file ***"
 		end
