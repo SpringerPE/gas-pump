@@ -18,7 +18,6 @@ class GASAgent
 	CACHED_API_FILE = "drive-#{API_VERSION}.cache"
 	CREDENTIAL_STORE_FILE = "#{$0}-oauth2.json"
 	DEFAULT_PATH = Dir.pwd
-	APPS_SCRIPTS_FILES_STORE = "imported_apps_script_data.json"
 
   def initialize
   	@client, @drive = setup
