@@ -27,5 +27,4 @@ client_secrets.json
 getfiles.rb-oauth2.json
 *.cache
 *.log
-lib/
-spec/
+lib/update.rb
