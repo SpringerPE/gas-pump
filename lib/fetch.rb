@@ -7,7 +7,7 @@ module Fetch
 	  auth = "Bearer " + client.authorization.access_token
 	  response = HTTParty.get(json_url, :headers => {"Authorization" => auth})
 		if response.code == 200
-			"*** Downloading files ***"
+			puts "*** Downloading files ***"
 			gas_project_data = response.parsed_response
 			gas_project_data["id"] = id
 
@@ -17,9 +17,9 @@ module Fetch
 
 		  expected_number_of_files = gas_project_data["files"].length
 		  number_of_files = count_files(dir_name)
-		  "*** Successfully downloaded Google Apps Script [ID: #{id}] ***" if files_created?(expected_number_of_files, number_of_files)
+		  puts "*** Successfully downloaded Google Apps Script [ID: #{id}] ***" if files_created?(expected_number_of_files, number_of_files)
 		else
-			"*** Unauthorized to download the file ***"
+			puts "*** Unauthorized to download the file ***"
 		end
 	end
 

@@ -2,16 +2,16 @@ require 'list'
 require 'fetch'
 require 'fileutils'
 require 'json'
-require 'launchy'
 require 'httparty'
+require 'command_line_reporter'
 require 'google/api_client'
 require 'google/api_client/client_secrets'
 require 'google/api_client/auth/file_storage'
 require 'google/api_client/auth/installed_app'
 
 class GASAgent
-	include List, Fetch
-	attr_accessor :client, :drive, :all_projects
+	include List, Fetch, CommandLineReporter
+	attr_accessor :client, :drive, :all_projects, :path
 
 	API_KEY = ENV['GAS_API_KEY']
 	API_VERSION = 'v2'
@@ -41,6 +41,7 @@ class GASAgent
 	  # Note: FileStorage is not suitable for multi-user applications.
 	  file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
 	  if file_storage.authorization.nil?
+	  	puts "Please check your browser for authentication"
 	    client_secrets = Google::APIClient::ClientSecrets.load
 	    # The InstalledAppFlow is a helper class to handle the OAuth 2.0 installed
 	    # application flow, which ties in with FileStorage to store credentials

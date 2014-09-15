@@ -35,6 +35,25 @@ module List
 		list
 	end
 
+	def create_table(files_list=@all_projects)
+		table(:border => true) do
+	     row do
+	       column('ID', :width => 60)
+	       column('NAME', :width => 20)
+	       column('MIME TYPE', :width => 20)
+	       column('OWNERS', :width => 20)
+	     end
+	     files_list.each do |file|
+		     	row do
+		       column(file.id)
+		       column(file.title)
+		       column(file.mimeType)
+		       column(file.ownerNames)
+		     end
+		   end
+	  end
+  end
+
 	def select_project(id, files_list=@all_projects)
 	  files_list.find { |file| file.id == id}
 	end

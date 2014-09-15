@@ -53,6 +53,18 @@ describe GASAgent do
   	agent.stub(:create_directory)
   	agent.stub(:create_files)
   	agent.stub(:count_files).and_return(1)
-  	expect(agent.download_project(2, all_drive_files)).to eq "*** Successfully downloaded Google Apps Script [ID: 2] ***"
+  	output = capture_stdout { agent.download_project(2, all_drive_files) }
+  	expect(output).to eq("*** Downloading files ***\n*** Successfully downloaded Google Apps Script [ID: 2] ***\n")
+	end
+
+	def capture_stdout(&block)
+	  original_stdout = $stdout
+	  $stdout = fake = StringIO.new
+	  begin
+	    yield
+	  ensure
+	    $stdout = original_stdout
+	  end
+	  fake.string
 	end
 end

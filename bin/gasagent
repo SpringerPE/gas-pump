@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+require 'gasagent'
+
+agent = GASAgent.new
+
+COMMAND = ARGV[0] || ""
+ID = ARGV[1] || nil
+PATH = ARGV[2]
+
+case COMMAND.downcase
+when "list"
+	agent.create_table
+when "download"
+	if ID != nil
+		agent.download_project(ID) 
+	else
+		puts "To download a file: gasagent download <ID>"
+	end
+when "upload"
+	puts "Uploading files"
+when "create"
+	puts "Creating files"
+else
+	puts "To start: gasagent [ list | download | upload | create ] <ID> \nThe default path for downloading/uploading files is: #{agent.path}."
+end
+	
