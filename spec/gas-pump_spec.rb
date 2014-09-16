@@ -1,29 +1,33 @@
 require "gas-pump"
+require "spec_helper"
 
 describe GASPump do
 	let(:agent)    { GASPump.new }
 	let(:client)   { agent.client }
 	let(:drive)    { agent.drive }
 	let(:doc_file) { double("file", :title => "Document", 
-																	:id => 1, 
+																	:id => "1", 
 																	:mimeType => "Doc", 
 																	:ownerNames => "Me")
 									}
 	let(:gas_file) { double("file", :title => "GAS Project", 
-																	:id => 2, 
+																	:id => "2", 
 																	:mimeType => "application/vnd.google-apps.script", 
 																	:ownerNames => "Me",
 																	:export_links => {"application/vnd.google-apps.script+json" => "www.fake.com"})
 									}
 	let(:all_drive_files) { Array.new }
 	let(:response) { double("response", :code => 200,
-																			:parsed_response => { "files" => [{ :id => "123456",																				
-																																					:name => "Main",
-																																					:type => "server_js",
-																																					:source =>"some source"}]})}
+																			:parsed_response => { "files" => [{ "id" => "123456",																				
+																																					"name" => "Main",
+																																					"type" => "server_js",
+																																					"source" =>"some source"}]})}
 	before(:each) do
 		all_drive_files << doc_file
 		all_drive_files << gas_file
+		agent.all_projects = all_drive_files
+		path = Dir.pwd
+		agent.path = path+"/tmp"
 	end
 
 	it "has a client and a Google Drive" do
@@ -43,19 +47,30 @@ describe GASPump do
 	end
 
 	it "can select a project" do
-		file = agent.select_project(2, all_drive_files)
+		file = agent.select_project("2")
 		expect(file).to eq(gas_file)
 	end
 
 	it "can download a project" do
-		HTTParty.stub(:get).and_return(response)
-  	agent.stub(:save_response)
-  	agent.stub(:create_directory).and_return("/some/directory")
-  	agent.stub(:create_files)
-  	agent.stub(:count_files).and_return(1)
-  	output = capture_stdout { agent.download_project(2, all_drive_files) }
-  	expect(output).to eq("*** Downloading files ***\n*** Successfully downloaded Google Apps Script [ID: 2] to /some/directory ***\n")
+		agent.stub(:get_project).and_return(response)
+  	# agent.stub(:save_response)
+  	path = Dir.pwd
+  	output = capture_stdout { agent.download_project("2") }
+  	expect(output).to eq("*** Connecting to Google Drive ***\n*** Downloading files ***\n*** Successfully downloaded Google Apps Script [ID: 2] to [\"#{agent.path}/GAS Project\"] ***\n")
 	end
+
+	it "can create a project hash for upload from old drive files" do
+		agent.stub(:get_project).and_return(response)
+		expect( agent.prepare_for_upload(gas_file)).to eq({"files"=>[{"id"=>"123456", "name"=>"Main", "type"=>"server_js", "source"=>"some source"}]})
+	end
+
+	it "can create a project hash from new files" do
+		dir_name = agent.create_directory("fake_directory")
+		gas_project_data = response.parsed_response
+		agent.create_files(dir_name, gas_project_data)
+		expect( agent.prepare_for_upload("fake_directory")).to eq({"files"=>[{"name"=>"Main", "type"=>"server_js", "source"=>"some source"}]})
+	end
+
 
 	def capture_stdout(&block)
 	  original_stdout = $stdout

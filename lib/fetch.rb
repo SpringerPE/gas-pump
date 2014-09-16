@@ -1,18 +1,18 @@
 module Fetch
 
-	def download_project(id, files_list=@all_projects, client=@client)
-		"*** Connecting to Google Drive ***"
-	  file = select_project(id, files_list)
-	   
-	  json_url = file.export_links["application/vnd.google-apps.script+json"]
-	  auth = "Bearer " + client.authorization.access_token
-	  response = HTTParty.get(json_url, :headers => {"Authorization" => auth})
+	def download_project(id, client=@client)
+		puts "*** Connecting to Google Drive ***"
+	  file = select_project(id)
+
+	  response = get_project(file)
+
 		if response.code == 200
 			puts "*** Downloading files ***"
 			gas_project_data = response.parsed_response
 			gas_project_data["id"] = id
 
-		  save_response(gas_project_data.to_json, "imported_data_#{id}")
+			## DO I NEED TO SAVE THE RESPONSE?
+		  # save_response(gas_project_data.to_json, "imported_data_#{id}")
 		  dir_name = create_directory(file.title)
 		  create_files(dir_name, gas_project_data)
 
@@ -24,8 +24,15 @@ module Fetch
 		end
 	end
 
-	def create_directory(name, path=@path)
-		save_folder = path+"/#{name}"
+	def get_project(file, client=@client)
+	  json_url = file.export_links["application/vnd.google-apps.script+json"]
+	  auth = "Bearer " + client.authorization.access_token
+	  response = HTTParty.get(json_url, :headers => {"Authorization" => auth})
+	  response
+	end
+
+	def create_directory(name)
+		save_folder = @path + "/#{name}"
 	  FileUtils::mkdir_p(save_folder)
 	end
 

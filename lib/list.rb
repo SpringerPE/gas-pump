@@ -16,7 +16,7 @@ module List
 	      result.concat(files.items)
 	      page_token = files.next_page_token
 	    else
-	      puts "An error occurred: #{api_result.data['error']['errors'].inspect}"
+	      puts "An error occurred: #{api_result.data['error'].inspect}"
 	      page_token = nil
 	    end
 	  end while page_token.to_s != ''

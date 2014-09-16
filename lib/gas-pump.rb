@@ -1,5 +1,6 @@
 require 'list'
 require 'fetch'
+require 'upload'
 require 'fileutils'
 require 'json'
 require 'httparty'
@@ -10,7 +11,7 @@ require 'google/api_client/auth/file_storage'
 require 'google/api_client/auth/installed_app'
 
 class GASPump
-	include List, Fetch, CommandLineReporter
+	include List, Fetch, CommandLineReporter, Upload
 	attr_accessor :client, :drive, :all_projects, :path
 
 	API_KEY = ENV['GAS_API_KEY']
@@ -32,7 +33,7 @@ class GASPump
 	  logger = Logger.new(log_file)
 	  logger.level = Logger::DEBUG
 
-	  client = Google::APIClient.new(:application_name => 'GAS Agent',
+	  client = Google::APIClient.new(:application_name => 'GAS Pump',
 	      :application_version => '1.0.0')
 
 	  # FileStorage stores auth credentials in a file, so they survive multiple runs
