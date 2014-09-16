@@ -26,7 +26,7 @@ when "upload"
 
 when "create"
 	if PROJECT != nil
-		agent.upload_project(PROJECT) 
+		agent.create_project(PROJECT) 
 	else
 		puts "To upload a file: gas-pump upload <PROJECT_FOLDER_NAME>"
 	end
@@ -36,10 +36,10 @@ else
 	  Usage: gas-pump <command> [<arg>]
 	  
 	  Commands:
-	    list                  -- lists the Google Apps Scripts projects on your Google Drive
-	    download <PROJECT_ID>         -- downloads the project
-	    upload <PROJECT_ID>           -- uploads local changes to the project
-	    create <FOLDER_NAME>  -- creates the project
+	    list                   -- lists the Google Apps Scripts projects on your Google Drive
+	    download <PROJECT_ID>  -- downloads the project
+	    upload <PROJECT_ID>    -- uploads local changes to the project
+	    create <FOLDER_NAME>   -- creates the project
 
 	  NOTE: The default path for downloading/uploading files is: #{agent.path}.
 	 "

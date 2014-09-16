@@ -2,12 +2,13 @@ module Fetch
 
 	def download_project(id, client=@client)
 		puts "*** Connecting to Google Drive ***"
+
 	  file = select_project(id)
 
 	  response = get_project(file)
 
 		if response.code == 200
-			puts "*** Downloading files ***"
+			puts "*** DOWNLOADING FILES ***"
 			gas_project_data = response.parsed_response
 			gas_project_data["id"] = id
 

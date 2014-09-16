@@ -12,7 +12,7 @@ require 'google/api_client/auth/installed_app'
 
 class GASPump
 	include List, Fetch, CommandLineReporter, Upload
-	attr_accessor :client, :drive, :all_projects, :path
+	attr_accessor :client, :drive, :all_projects, :path, :api_key
 
 	API_KEY = ENV['GAS_API_KEY']
 	API_VERSION = 'v2'
@@ -25,6 +25,7 @@ class GASPump
   	@all_files = retrieve_drive_files_list(@client, @drive)
   	@all_projects = retrieve_apps_script(@all_files)
   	@path = DEFAULT_PATH
+  	@api_key = API_KEY
 	end
 
 	def setup

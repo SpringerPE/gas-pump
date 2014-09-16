@@ -1,19 +1,20 @@
 module Upload
-	def create_project(scripts_project)
+	def create_project(scripts_project, client=@client)
 		puts "*** Connecting to Google Drive ***"
 
-	  receiver = "https://www.googleapis.com/upload/drive/v2/files?convert=true&key="+API_KEY
+	  receiver = "https://www.googleapis.com/upload/drive/v2/files?convert=true&key="+@api_key
 	  auth = "Bearer " + client.authorization.access_token
 	  content = prepare_for_upload(scripts_project).to_json
 
-	  request = HTTParty.post(receiver, :headers => {"Authorization" => auth, "Content-Type"=>  "application/vnd.google-apps.script+json"}, :body => content)
+	  response = HTTParty.post(receiver, :headers => { "Authorization" => auth, 
+	  																							   "Content-Type" =>  "application/vnd.google-apps.script+json"}, 
+	  																	 :body => content)
 
 	  if response.code == 200
 			puts "*** Successfully uploaded Google Apps Script. Google has renamed this file \"Untitled\" ***"
 		else
-			puts "*** Unauthorized to download the file ***"
+			puts "*** Sorry, I can't upload the file. [code: #{response.code}, #{response.parsed_response}]***"
 		end
-
 	end
 
 	def upload_project(id, client=@client)
@@ -27,12 +28,12 @@ module Upload
 
 	  response = HTTParty.put(receiver, :headers => {"Authorization" => auth, 
 	  																							"Content-Type" =>  "application/vnd.google-apps.script+json"}, 
-	  																							:body => content)
+	  																	:body => content)
 		
 		if response.code == 200
 			puts "*** Successfully uploaded Google Apps Script [ID: #{id}] ***"
 		else
-			puts "*** Unauthorized to download the file ***"
+			puts "*** Sorry, I can't upload the file. [code: #{response.code}, #{response.parsed_response}] ***"
 		end
 	end
 
