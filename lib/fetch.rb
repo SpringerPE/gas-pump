@@ -29,9 +29,11 @@ module Fetch
 	  FileUtils::mkdir_p(save_folder)
 	end
 
-	def create_files(dir, source_code)
+	def create_files(dir_name, source_code)
 	  source_code["files"].each do |script|
-	    File.open(File.join(dir, script["name"]+".gs"), "w+") { |file| file.write(script["source"]) }
+	  	file_name = script["name"]+".gs" if script["type"] == "server_js"
+	  	file_name = script["name"]+".html" if script["type"] == "html"
+		  File.open(File.join(dir_name, file_name), "w+") { |file| file.write(script["source"]) }
 	  end
 	end
 
