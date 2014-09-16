@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
-require 'gas-pump'
+require 'gas-pump' 
 
 agent = GASPump.new
 
 COMMAND = ARGV[0] || ""
 ID = ARGV[1] || nil
-PATH = ARGV[2]
 
 case COMMAND.downcase
 when "list"
@@ -21,6 +20,15 @@ when "upload"
 when "create"
 	puts "Creating files"
 else
-	puts "To start: gas-pump [ list | download | upload | create ] <ID> \nThe default path for downloading/uploading files is: #{agent.path}."
+	puts "
+	  Usage: gas-pump <command> [<arg>]
+	  
+	  Commands:
+	    list                  -- lists the Google Apps Scripts projects on your Google Drive
+	    download <ID>         -- downloads the project
+	    upload <ID>           -- uploads the project
+	    create <FOLDER_NAME>  -- creates the project
+
+	  NOTE: The default path for downloading/uploading files is: #{agent.path}.
+	 "
 end
-	
