@@ -22,8 +22,5 @@ tmp
 mkmf.log
 .DS_Store
 *.json
-trello-script/
-client_secrets.json
-getfiles.rb-oauth2.json
 *.cache
 *.log
