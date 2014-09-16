@@ -1,7 +1,7 @@
-require "gasagent"
+require "gas-pump"
 
-describe GASAgent do
-	let(:agent)    { GASAgent.new }
+describe GASPump do
+	let(:agent)    { GASPump.new }
 	let(:client)   { agent.client }
 	let(:drive)    { agent.drive }
 	let(:doc_file) { double("file", :title => "Document", 

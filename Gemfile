@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in gasagent.gemspec
+# Specify your gem's dependencies in gas-pump.gemspec
 gemspec

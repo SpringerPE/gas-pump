@@ -9,7 +9,7 @@ require 'google/api_client/client_secrets'
 require 'google/api_client/auth/file_storage'
 require 'google/api_client/auth/installed_app'
 
-class GASAgent
+class GASPump
 	include List, Fetch, CommandLineReporter
 	attr_accessor :client, :drive, :all_projects, :path
 

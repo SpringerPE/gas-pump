@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-require 'gasagent'
+require 'gas-pump'
 
-agent = GASAgent.new
+agent = GASPump.new
 
 COMMAND = ARGV[0] || ""
 ID = ARGV[1] || nil
@@ -14,13 +14,13 @@ when "download"
 	if ID != nil
 		agent.download_project(ID) 
 	else
-		puts "To download a file: gasagent download <ID>"
+		puts "To download a file: gas-pump download <ID>"
 	end
 when "upload"
 	puts "Uploading files"
 when "create"
 	puts "Creating files"
 else
-	puts "To start: gasagent [ list | download | upload | create ] <ID> \nThe default path for downloading/uploading files is: #{agent.path}."
+	puts "To start: gas-pump [ list | download | upload | create ] <ID> \nThe default path for downloading/uploading files is: #{agent.path}."
 end
 	

@@ -3,7 +3,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "gasagent"
+  spec.name          = "gas-pump"
   spec.version       = "1.0.0"
   spec.authors       = ["Jorja Hung"]
   spec.email         = ["jorjahung@gmail.com"]
@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
 
   spec.files         = `git ls-files -z`.split("\x0")
   # spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.executables = ["gasagent"]
+  spec.executables = ["gas-pump"]
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
