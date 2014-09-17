@@ -24,10 +24,10 @@ A gem for importing, exporting, and creating new Google Apps Scripts from/to you
 `gas-pump <command> [<arg>]`
 	  
 Commands:
-  list                   -- lists the Google Apps Scripts projects on your Google Drive
-  download <PROJECT_ID>  -- downloads the project
-  upload <PROJECT_ID>    -- uploads local changes to the project
-  create <FOLDER_NAME>   -- creates the project
+  1. list                   -- lists the Google Apps Scripts projects on your Google Drive
+  2. download <PROJECT_ID>  -- downloads the project
+  3. upload <PROJECT_ID>    -- uploads local changes to the project
+  4. create <FOLDER_NAME>   -- creates the project
 
 ## Contributing
 
