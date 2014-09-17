@@ -70,9 +70,29 @@ module Upload
 	    file_id = !project_id.nil? ? find_old_file_id(file_name, gas_project_data) : nil
 	    collected_file_data << create_file_data(file_name, file_type, file_source, file_id) 
 	  end
+
+	  unique_files_in_drive = check_unique_drive_files(collected_file_data, scripts_project)
+	  "!!! You have files in drive that are not in your local copy. I will not touch them for now, but please do a gas-pump download to keep your local version up to date!" if !unique_files_in_drive.nil?
+
 	  puts "*** Putting a hash together for JSON body ***"
-	  files_for_upload["files"] = collected_file_data
+	  files_for_upload["files"] = collected_file_data | unique_files_in_drive
+
 	  files_for_upload
+	end
+
+	def check_unique_drive_files(collected_file_data, scripts_project)
+		puts "*** Looking for unique files in Google Drive ***"
+
+		# THESE ARE FILES IN DRIVE
+	  files_in_drive = get_project(scripts_project).parsed_response["files"]
+
+	  # THESE ARE IDS OF FILES I HAVE LOCALLY
+	  local_file_ids = collected_file_data.map {|local_file| local_file["id"]}
+
+	  # THESE ARE FILES I HAVE ON DRIVE THAT ARE NOT FOUND LOCALLY
+	  filtered_array = files_in_drive.reject {|hash| local_file_ids.include? hash["id"]}
+
+		filtered_array
 	end
 
 	def create_file_data(file_name, file_type, file_source, file_id) 
