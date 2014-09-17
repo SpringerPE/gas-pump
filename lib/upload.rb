@@ -83,13 +83,13 @@ module Upload
 	def check_unique_drive_files(collected_file_data, scripts_project)
 		puts "*** Looking for unique files in Google Drive ***"
 
-		# THESE ARE FILES IN DRIVE
+		# THESE ARE PROJECT FILES IN DRIVE
 	  files_in_drive = get_project(scripts_project).parsed_response["files"]
 
 	  # THESE ARE IDS OF FILES I HAVE LOCALLY
 	  local_file_ids = collected_file_data.map {|local_file| local_file["id"]}
 
-	  # THESE ARE FILES I HAVE ON DRIVE THAT ARE NOT FOUND LOCALLY
+	  # FILTERS FILES I HAVE ON DRIVE THAT ARE NOT FOUND LOCALLY
 	  filtered_array = files_in_drive.reject {|hash| local_file_ids.include? hash["id"]}
 
 		filtered_array
