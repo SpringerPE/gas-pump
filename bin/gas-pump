@@ -5,6 +5,7 @@ agent = GASPump.new
 
 COMMAND = ARGV[0] || ""
 PROJECT = ARGV[1] || nil
+SRC = ARGV[2] || nil
 
 case COMMAND.downcase
 when "list"
@@ -19,7 +20,11 @@ when "download"
 
 when "upload"
 	if PROJECT != nil
-		agent.upload_project(PROJECT) 
+		if SRC != nil
+			(File.exists? File.expand_path(SRC)) ? agent.upload_project(PROJECT, SRC) : "Directory does not exist"
+		else
+			agent.upload_project(PROJECT)
+		end
 	else
 		puts "To upload a file: gas-pump upload <PROJECT_ID>"
 	end
@@ -38,7 +43,9 @@ else
 	  Commands:
 	    list                   -- lists the Google Apps Scripts projects on your Google Drive
 	    download <PROJECT_ID>  -- downloads the project
-	    upload <PROJECT_ID>    -- uploads local changes to the project
+	    upload <PROJECT_ID> [Optional: <SOURCE_DIRECTORY>]   -- uploads local changes to the project
+	    																										 -- if you don't state the source directory for the project files, 
+	    																										 		it will look in your current directory for the original project name
 	    create <FOLDER_NAME>   -- creates the project
 
 	  NOTE: The default path for downloading/uploading files is: #{agent.path}.

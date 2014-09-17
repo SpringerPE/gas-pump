@@ -29,14 +29,15 @@ module Upload
 		end
 	end
 
-	def upload_project(id, client=@client)
+	def upload_project(id, src=nil, client=@client)
+		
 		puts "*** Connecting to Google Drive ***"
 
 		scripts_project = select_project(id)
 
 	  receiver = "https://www.googleapis.com/upload/drive/v2/files/"+scripts_project.id
 	  auth = "Bearer " + client.authorization.access_token
-	  content = prepare_for_upload(scripts_project).to_json
+	  content = prepare_for_upload(scripts_project, src).to_json
 
 	  response = HTTParty.put(receiver, :headers => {"Authorization" => auth, 
 	  																							"Content-Type" =>  "application/vnd.google-apps.script+json"}, 
@@ -49,12 +50,19 @@ module Upload
 		end
 	end
 
-	def prepare_for_upload(scripts_project)
+	def prepare_for_upload(scripts_project, src=nil)
 		puts "*** PREPARING UPLOAD ***"
-		directory_name = (scripts_project.is_a? String) ? scripts_project : scripts_project.title 
-		project_id = (scripts_project.is_a? String) ? nil : scripts_project.id 
+		
+		if src == nil
+			directory_name = (scripts_project.is_a? String) ? scripts_project : scripts_project.title 
+		  directory_src = @path + "/" + directory_name
+		  directory_not_found_error(directory_src) if (!File.exists? File.expand_path(directory_src))
+		  project_files = directory_src + "/*.{gs,html}"
+		else
+			project_files = src + "/*.{gs,html}"
+		end
 
-	  project_files = @path + "/" + directory_name + "/*.{gs,html}"
+		project_id = (scripts_project.is_a? String) ? nil : scripts_project.id 
 	  collected_file_data = []
 	  files_for_upload = {}
 
@@ -62,6 +70,8 @@ module Upload
 	  	file = select_project(project_id)
 	  	gas_project_data = get_project(file).parsed_response
 	  end
+
+	  puts "*** Getting files from #{project_files} ***"
 
 	  Dir.glob(project_files) do |file|
 	    file_name = File.basename(file,File.extname(file))
@@ -120,6 +130,10 @@ module Upload
 	  file = list_of_files.detect {|file| file["name"] == file_name}
 	 	file_id = !file.nil? ? file["id"] : nil
 	 	file_id
+	end
+
+	def directory_not_found_error(directory_src)
+		abort("ABORTING UPLOAD: Directory #{directory_src} not found")
 	end
 
 end
