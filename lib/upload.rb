@@ -1,19 +1,31 @@
 module Upload
 	def create_project(scripts_project, client=@client)
 		puts "*** Connecting to Google Drive ***"
-
-	  receiver = "https://www.googleapis.com/upload/drive/v2/files?convert=true&key="+@api_key
-	  auth = "Bearer " + client.authorization.access_token
-	  content = prepare_for_upload(scripts_project).to_json
-
-	  response = HTTParty.post(receiver, :headers => { "Authorization" => auth, 
-	  																							   "Content-Type" =>  "application/vnd.google-apps.script+json"}, 
-	  																	 :body => content)
-
-	  if response.code == 200
-			puts "*** Successfully uploaded Google Apps Script. Google has renamed this file \"Untitled\" ***"
+		if @api_key == nil
+			puts "
+			You don't have an API key set up for uploading. 
+			You can get this from https://console.developers.google.com/project 
+			(Console > APIs & auth > Credentials > Public API Access)
+			Select \"Create New Key\", choose \"Server Key\", and select \"Create\"
+			Type your API key:".gsub /^( |\t)+/, ""
+			@api_key = STDIN.gets.chomp
+			puts "!!! Please don't forget to set this as an ENV variable.\nTo do this, just run this command: export GAS_API_KEY=#{@api_key}"
+			puts "*** Reconnecting you now!***"
+			create_project(scripts_project)
 		else
-			puts "*** Sorry, I can't upload the file. [code: #{response.code}, #{response.parsed_response}]***"
+		  receiver = "https://www.googleapis.com/upload/drive/v2/files?convert=true&key="+@api_key
+		  auth = "Bearer " + client.authorization.access_token
+		  content = prepare_for_upload(scripts_project).to_json
+
+		  response = HTTParty.post(receiver, :headers => { "Authorization" => auth, 
+		  																							   "Content-Type" =>  "application/vnd.google-apps.script+json"}, 
+		  																	 :body => content)
+
+		  if response.code == 200
+				puts "*** Successfully uploaded Google Apps Script. Google has renamed this file \"Untitled\" ***"
+			else
+				puts "*** Sorry, I can't upload the file. [code: #{response.code}, #{response.parsed_response}]***"
+			end
 		end
 	end
 
