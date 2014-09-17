@@ -27,30 +27,27 @@ module List
 	  drive_files_list.select { |file| file.mimeType == "application/vnd.google-apps.script"}
 	end
 
-	def summarize(files_list=@all_projects)
-		list = []
-		files_list.each do |file|
-			list << "Name: \"#{file.title}\" \nID: #{file.id} \nmimeType: #{file.mimeType} \nOwners: #{file.ownerNames}\n"
-		end
-		list
-	end
-
 	def create_table(files_list=@all_projects)
-		table(:border => true) do
-	     row do
-	       column('ID', :width => 60)
-	       column('NAME', :width => 20)
-	       column('MIME TYPE', :width => 20)
-	       column('OWNERS', :width => 20)
-	     end
-	     files_list.each do |file|
-		     	row do
-		       column(file.id)
-		       column(file.title)
-		       column(file.mimeType)
-		       column(file.ownerNames)
-		     end
-		   end
+		files_list.each do |file|
+			table(:border => true) do
+				row do
+					column('NAME', :width => 6)
+					column(file.title, :width => 118)	
+				end
+
+				row do
+					column('ID')
+					column(file.id)
+				end
+				row do
+					column('OWNERS')
+					column(file.ownerNames)
+				end
+				row do
+					column('LINK')
+					column(file.alternateLink)
+				end
+			end
 	  end
   end
 
