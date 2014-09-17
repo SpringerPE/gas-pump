@@ -55,12 +55,11 @@ module Upload
 		
 		if src == nil
 			directory_name = (scripts_project.is_a? String) ? scripts_project : scripts_project.title 
-		  directory_src = @path + "/" + directory_name
-		  directory_not_found_error(directory_src) if (!File.exists? File.expand_path(directory_src))
-		  project_files = directory_src + "/*.{gs,html}"
-		else
-			project_files = src + "/*.{gs,html}"
+		  src = @path + "/" + directory_name
 		end
+
+	  directory_not_found_error(src) if !directory_exists?(src)
+		project_files = src + "/*.{gs,html}"
 
 		project_id = (scripts_project.is_a? String) ? nil : scripts_project.id 
 	  collected_file_data = []
@@ -132,8 +131,12 @@ module Upload
 	 	file_id
 	end
 
-	def directory_not_found_error(directory_src)
-		abort("ABORTING UPLOAD: Directory #{directory_src} not found")
+	def directory_exists?(directory)
+		File.exists? File.expand_path(directory)
+	end
+
+	def directory_not_found_error(directory)
+		abort("ABORTING UPLOAD: Directory #{directory} not found")
 	end
 
 end

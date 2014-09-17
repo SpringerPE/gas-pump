@@ -21,7 +21,7 @@ when "download"
 when "upload"
 	if PROJECT != nil
 		if SRC != nil
-			(File.exists? File.expand_path(SRC)) ? agent.upload_project(PROJECT, SRC) : "Directory does not exist"
+			agent.upload_project(PROJECT, SRC)
 		else
 			agent.upload_project(PROJECT)
 		end
