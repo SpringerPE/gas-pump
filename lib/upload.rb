@@ -58,6 +58,7 @@ module Upload
 	    file_id = !project_id.nil? ? find_old_file_id(file_name, gas_project_data) : nil
 	    collected_file_data << create_file_data(file_name, file_type, file_source, file_id) 
 	  end
+	  puts "*** Putting a hash together for JSON body ***"
 	  files_for_upload["files"] = collected_file_data
 	  files_for_upload
 	end
@@ -82,9 +83,11 @@ module Upload
 	end
 
 	def find_old_file_id(file_name, gas_project_data)
+	  puts "*** Finding old file id for #{file_name} ***"
 	  list_of_files = gas_project_data["files"]
 	  file = list_of_files.detect {|file| file["name"] == file_name}
-	  file["id"]
+	 	file_id = !file.nil? ? file["id"] : nil
+	 	file_id
 	end
 
 end
