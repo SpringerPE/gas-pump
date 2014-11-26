@@ -7,7 +7,7 @@ A gem for importing, exporting, and creating new Google Apps Scripts from/to you
 1. Clone this repo
 2. Add your client_secrets.json file to the folder. Instructions are here: https://code.google.com/p/google-apps-manager/wiki/CreatingClientSecretsFile
 3. To avoid having an invalid_client error:
- - Go [here](https://console.developers.google.com/project) 
+ - Go [here](https://github.com/jay0lee/GAM/wiki/CreatingClientSecretsFile) 
  - Click on project name
  - Go to "APIs & auth" -> "Consent screen".
  - Write a project name and select your email address
