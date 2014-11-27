@@ -40,12 +40,6 @@ describe GASPump do
 		expect(project_files.length).to eq 1
 	end
 
-	it "prints a list of files and their IDs" do
-		file1 = double("file", :title => "Untitled", :id => 1, :mimeType => "Doc", :ownerNames => "Me")
-		list = Array.new(1) {file1}
-		expect(agent.summarize(list)).to eq ["Name: \"Untitled\" \nID: 1 \nmimeType: Doc \nOwners: Me\n"]
-	end
-
 	it "can select a project" do
 		file = agent.select_project("2")
 		expect(file).to eq(gas_file)
@@ -53,22 +47,20 @@ describe GASPump do
 
 	it "can download a project" do
 		agent.stub(:get_project).and_return(response)
-  	# agent.stub(:save_response)
-  	path = Dir.pwd
   	output = capture_stdout { agent.download_project("2") }
-  	expect(output).to eq("*** Connecting to Google Drive ***\n*** Downloading files ***\n*** Successfully downloaded Google Apps Script [ID: 2] to [\"#{agent.path}/GAS Project\"] ***\n")
+  	expect(output).to eq("*** Connecting to Google Drive ***\n*** DOWNLOADING FILES ***\n*** Successfully downloaded Google Apps Script [ID: 2] to [\"#{agent.path}/GAS Project\"] ***\n")
 	end
 
 	it "can create a project hash for upload from old drive files" do
 		agent.stub(:get_project).and_return(response)
-		expect( agent.prepare_for_upload(gas_file)).to eq({"files"=>[{"id"=>"123456", "name"=>"Main", "type"=>"server_js", "source"=>"some source"}]})
+		expect( agent.prepare_for_upload(gas_file, nil)).to eq({"files"=>[{"id"=>"123456", "name"=>"Main", "type"=>"server_js", "source"=>"some source"}]})
 	end
 
 	it "can create a project hash from new files" do
 		dir_name = agent.create_directory("fake_directory")
 		gas_project_data = response.parsed_response
 		agent.create_files(dir_name, gas_project_data)
-		expect( agent.prepare_for_upload("fake_directory")).to eq({"files"=>[{"name"=>"Main", "type"=>"server_js", "source"=>"some source"}]})
+		expect( agent.prepare_for_upload("fake_directory", nil, false)).to eq({"files"=>[{"name"=>"Main", "type"=>"server_js", "source"=>"some source"}]})
 	end
 
 
